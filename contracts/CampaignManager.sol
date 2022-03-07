@@ -1,4 +1,4 @@
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity 0.8.10;
 
 //SPDX-License-Identifier: MIT
 
@@ -6,12 +6,13 @@ pragma solidity >=0.4.22 <0.9.0;
 * 
 * Openzeppelin library
 */
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./Campaign.sol";
 import "./Ownable.sol";
 
-contract CampaignManager is Ownable {
+
+contract CampaignManager is Ownable { 
 
     using SafeMath for uint;
     
@@ -32,18 +33,14 @@ contract CampaignManager is Ownable {
     function createCampaign(string memory _campaignId,  string memory _campaignName) public {
         Campaign newCampaign = new Campaign(this, _campaignId, _campaignName, index);
         address  _addr = address(newCampaign);
-
         S_Campaign  memory _sCampaign = S_Campaign({ campaign: newCampaign,  balance: uint(0)});
-
         campaigns[_addr] = _sCampaign;
-
         emit CampaignCreated(index, _addr);
-
         index++;
 
     }
 
-    function fundCampaign(address campaignAddres) payable public  {
+    function fundCampaign(address campaignAddres) public payable {
         campaigns[campaignAddres].balance = campaigns[campaignAddres].balance.add(msg.value);
         donors[campaignAddres][msg.sender] = msg.value;
         emit CampaignFunded(campaignAddres, msg.value, campaigns[campaignAddres].balance);
