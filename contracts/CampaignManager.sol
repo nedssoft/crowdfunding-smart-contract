@@ -26,11 +26,11 @@ contract CampaignManager is Ownable {
 
     uint index = 1;
 
-    event CampaignCreated(uint indexed _campaignIndex, address _campaignAddress);
-    event CampaignFunded(address campaignAddress, uint amount, uint totalReceived);
-    event CampaignFundWithdrawn(address campaignAddress, uint amount, uint balance);
+    event CampaignCreated(uint indexed campaignIndex, address campaignAddress);
+    event CampaignFunded(address campaignAddress, address donorAddress, uint amount, uint totalReceived);
+    event CampaignFundWithdrawn(address campaignAddress, address toAddress, uint amount, uint balance);
 
-    function createCampaign(string memory _campaignId,  string memory _campaignName) public {
+    function createCampaign(string memory _campaignId,  string memory _campaignName) public onlyOwner  {
         Campaign newCampaign = new Campaign(this, _campaignId, _campaignName, index);
         address  _addr = address(newCampaign);
         S_Campaign  memory _sCampaign = S_Campaign({ campaign: newCampaign,  balance: uint(0)});
@@ -43,16 +43,16 @@ contract CampaignManager is Ownable {
     function fundCampaign(address campaignAddres) public payable {
         campaigns[campaignAddres].balance = campaigns[campaignAddres].balance.add(msg.value);
         donors[campaignAddres][msg.sender] = msg.value;
-        emit CampaignFunded(campaignAddres, msg.value, campaigns[campaignAddres].balance);
+        emit CampaignFunded(campaignAddres, msg.sender, msg.value, campaigns[campaignAddres].balance);
     }
 
-    function withdrawCampaignFunds(address campaignAddres, address payable _toAddress, uint amount) public onlyOwnerCanWithdraw {
+    function withdrawCampaignFunds(address campaignAddres, address payable _toAddress, uint amount) public onlyOwner {
         require(address(campaigns[campaignAddres].campaign) != address(0), "The campaign address supplied does not exist");
         S_Campaign memory campaign = campaigns[campaignAddres];
         require(campaign.balance >= amount, "Insufficient funds");
         _toAddress.transfer(amount);
         campaigns[campaignAddres].balance = campaign.balance.sub(amount);
-        emit CampaignFundWithdrawn(campaignAddres, amount, campaigns[campaignAddres].balance);
+        emit CampaignFundWithdrawn(campaignAddres, _toAddress, amount, campaigns[campaignAddres].balance);
     }
 
     

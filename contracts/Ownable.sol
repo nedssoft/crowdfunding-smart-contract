@@ -11,8 +11,8 @@ contract Ownable {
         owner = msg.sender;
     }
 
-    modifier onlyOwnerCanWithdraw() {
-        require(msg.sender == owner, "Only Contract Owner can authorize widthdrawal");
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only Contract Owner can authorize this operation");
         _;
     }
 }
