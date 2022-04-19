@@ -19,7 +19,7 @@ contract('CampaignManager Test', async (accounts) => {
   };
 
 
-  it('should allow only contract owner to create a campaign ', async () => {
+  it('should allow only contract owner to create a campaign', async () => {
     
     try {
       await managerInstance.createCampaign(
@@ -54,7 +54,6 @@ contract('CampaignManager Test', async (accounts) => {
         from: owner,
       },
     );
-
     const args = result.logs[0].args;
     const amountToDonate = 20000;
     const fundResponse = managerInstance.fundCampaign(args.campaignAddress, {

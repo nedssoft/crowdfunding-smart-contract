@@ -3,14 +3,13 @@ pragma solidity 0.8.10;
 //SPDX-License-Identifier: MIT
 
 /**
-* 
+* @source https://github.com/OpenZeppelin/openzeppelin-contracts
 * Openzeppelin library
 */
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./Campaign.sol";
 import "./Ownable.sol";
-
 
 contract CampaignManager is Ownable { 
 
@@ -20,12 +19,10 @@ contract CampaignManager is Ownable {
         Campaign campaign;
         uint balance;
     }
-
     mapping(address => S_Campaign) public campaigns;
     mapping(address => mapping(address => uint)) public donors;
 
     uint index = 1;
-
     event CampaignCreated(uint indexed campaignIndex, address campaignAddress);
     event CampaignFunded(address campaignAddress, address donorAddress, uint amount, uint totalReceived);
     event CampaignFundWithdrawn(address campaignAddress, address toAddress, uint amount, uint balance);
@@ -37,7 +34,6 @@ contract CampaignManager is Ownable {
         campaigns[_addr] = _sCampaign;
         emit CampaignCreated(index, _addr);
         index++;
-
     }
 
     function fundCampaign(address campaignAddres) public payable {
@@ -54,7 +50,6 @@ contract CampaignManager is Ownable {
         campaigns[campaignAddres].balance = campaign.balance.sub(amount);
         emit CampaignFundWithdrawn(campaignAddres, _toAddress, amount, campaigns[campaignAddres].balance);
     }
-
     
 }
 

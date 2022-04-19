@@ -8,7 +8,6 @@ contract Campaign {
 
     string public campaignId;
     string public campaignName;
-    address public ownerAddress;
     uint public index;
     CampaignManager parentContract;
 
@@ -16,7 +15,6 @@ contract Campaign {
         campaignId = _campaignId;
         campaignName = _campaignName;
         index = _index;
-        ownerAddress = msg.sender;
         parentContract = _parentContract;
     }
 
@@ -25,7 +23,4 @@ contract Campaign {
         require(success, "Payment failed");
     }
 
-    fallback() external  {
-
-    }
 }
